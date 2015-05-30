@@ -41,6 +41,12 @@
 #define kDefaultScrollerKnobStyle NSScrollerKnobStyleLight
 #define kDefaultAllowsEmptySelection YES
 
+@interface ITSidebar ()
+
+@property (strong) NSMatrix *matrix;
+
+@end
+
 @implementation ITSidebar
 @synthesize action = _action;
 @synthesize target = _target;
@@ -277,6 +283,16 @@
 - (void)removeItemAtIndex:(NSInteger)index
 {
 	[self.matrix removeRow:index];
+	[self resizeMatrix];
+}
+
+- (void)removeAllItems
+{
+	for (NSInteger i=[self numberOfItems]-1; i>=0; i++)
+	{
+		[self.matrix removeRow:i];
+	}
+	
 	[self resizeMatrix];
 }
 

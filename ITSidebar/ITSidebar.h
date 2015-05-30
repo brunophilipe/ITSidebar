@@ -37,7 +37,6 @@
 @class ITSidebarItemCell;
 
 @interface ITSidebar : NSView
-@property (strong) NSMatrix *matrix;
 
 @property (strong, nonatomic) id target;
 @property (nonatomic) SEL action;
@@ -53,14 +52,15 @@
 + (Class)sidebarItemCellClass;
 
 // Add/Remove Cells
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action;
 - (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action;
-
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image;
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action;
 - (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage;
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image;
 
-- (void)removeRow:(NSInteger)row __deprecated;
+- (void)removeRow:(NSInteger)row __deprecated; //what is a "row"? The user of an encapsulation doesn't care about the internal workings.
 - (void)removeItemAtIndex:(NSInteger)index;
+
+- (void)removeAllItems;
 
 - (NSInteger)numberOfItems;
 
