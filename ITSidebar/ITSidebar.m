@@ -201,7 +201,7 @@
 
 - (NSUInteger)selectedIndex {
     ITSidebarItemCell *cell = [self selectedItem];
-    return (int)[self.matrix.cells indexOfObject:cell];
+    return [self.matrix.cells indexOfObject:cell];
 }
 
 - (void)setSelectedIndex:(NSUInteger)index {
