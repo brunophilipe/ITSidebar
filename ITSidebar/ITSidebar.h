@@ -59,7 +59,10 @@
 - (ITSidebarItemCell *)addItemWithImage:(NSImage *)image;
 - (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage;
 
-- (void)removeRow:(NSInteger)row;
+- (void)removeRow:(NSInteger)row __deprecated;
+- (void)removeItemAtIndex:(NSInteger)index;
+
+- (NSInteger)numberOfItems;
 
 // Select Cells
 - (void)deselectAllItems;

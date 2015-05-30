@@ -46,6 +46,7 @@
 @synthesize target = _target;
 
 #pragma mark Initialise
+
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
@@ -55,10 +56,12 @@
     
     return self;
 }
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 - (id)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];
@@ -67,13 +70,16 @@
     }
     return self;
 }
+
 - (void)awakeFromNib {
     [self resizeMatrix];
     [self initialiseScrollView];
 }
+
 - (void)initialise {
     [self addMatrix];
 }
+
 - (void)initialiseScrollView {
     [[self enclosingScrollView] setDrawsBackground:YES];
     
@@ -91,6 +97,7 @@
                                                  name:NSViewBoundsDidChangeNotification
                                                object:clipView];
 }
+
 - (void)addMatrix {
     self.matrix = [[NSMatrix alloc] initWithFrame:[self frame]
                                              mode:NSRadioModeMatrix
@@ -104,24 +111,31 @@
     [self resizeMatrix];
     [self addSubview:self.matrix];
 }
+
 #pragma mark Scroll View
+
 - (NSColor *)backgroundColor {
     return [[self enclosingScrollView] backgroundColor];
 }
+
 - (void)setBackgroundColor:(NSColor *)backgroundColor {
     [[self enclosingScrollView] setBackgroundColor:backgroundColor];
 }
+
 - (NSScrollerKnobStyle)scrollerKnobStyle {
     return [[self enclosingScrollView] scrollerKnobStyle];
 }
+
 - (void)setScrollerKnobStyle:(NSScrollerKnobStyle)knobStyle {
     [[self enclosingScrollView] setScrollerKnobStyle:knobStyle];
 }
 
 #pragma mark Key Handling
+
 - (BOOL)acceptsFirstResponder {
     return YES;
 }
+
 - (void)keyDown:(NSEvent *)theEvent {
     // NSLog(@"%d", theEvent.keyCode);
     switch (theEvent.keyCode) {
@@ -147,6 +161,7 @@
             break;
     }
 }
+
 - (void)deselectAllItems {
     [self.matrix deselectSelectedCell];
     
@@ -155,6 +170,7 @@
     [self matrixCallback:self];
     
 }
+
 - (void)selectNextItem {
     [self selectNeighbourItemWithValue:1];
 }
@@ -168,16 +184,20 @@
 }
 
 #pragma mark Cells
+
 - (ITSidebarItemCell *)selectedItem {
     return self.matrix.selectedCell;
 }
+
 - (void)setSelectedItem:(ITSidebarItemCell *)selectedItem {
     self.selectedIndex = [[self.matrix cells] indexOfObject:selectedItem];
 }
+
 - (NSUInteger)selectedIndex {
     ITSidebarItemCell *cell = [self selectedItem];
     return (int)[self.matrix.cells indexOfObject:cell];
 }
+
 - (void)setSelectedIndex:(NSUInteger)index {
     if (index < self.matrix.cells.count) {
         [self.matrix selectCell:[self.matrix.cells objectAtIndex:index]];
@@ -186,18 +206,23 @@
         [self matrixCallback:self];
     }
 }
+
 + (NSSize)defaultCellSize {
     return NSMakeSize(62, 62);
 }
+
 - (NSSize)cellSize {
     return [self.matrix cellSize];
 }
+
 - (void)setCellSize:(NSSize)cellSize {
     [self.matrix setCellSize:cellSize];
 }
+
 - (BOOL)allowsEmptySelection {
     return self.matrix.allowsEmptySelection;
 }
+
 - (void)setAllowsEmptySelection:(BOOL)allowsEmptySelection {
     [self.matrix setAllowsEmptySelection:allowsEmptySelection];
     
@@ -210,46 +235,63 @@
 + (Class)sidebarItemCellClass {
     return [ITSidebarItemCell class];
 }
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action {
-    ITSidebarItemCell *cell = [[[self.class sidebarItemCellClass] alloc] initImageCell:image];
-    [cell setTarget:target];
-    [cell setAction:action];
-    [self addCell:cell];
-    
-    return cell;
+
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action
+{
+	ITSidebarItemCell *cell = [[[self.class sidebarItemCellClass] alloc] initImageCell:image];
+	
+	if (target) [cell setTarget:target];
+	if (action) [cell setAction:action];
+	if (alternateImage) [cell setAlternateImage:alternateImage];
+
+	[self addCell:cell];
+	
+	return cell;
 }
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action {
-    ITSidebarItemCell *cell = [self addItemWithImage:image target:target action:action];
-    [cell setAlternateImage:alternateImage];
-    
-    return cell;
+
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action
+{
+	return [self addItemWithImage:image alternateImage:nil target:target action:action];
 }
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image {
-    ITSidebarItemCell *cell = [[[self.class sidebarItemCellClass] alloc] initImageCell:image];
-    [self addCell:cell];
-    
-    return cell;
+
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image
+{
+	return [self addItemWithImage:image alternateImage:nil];
 }
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage {
-    ITSidebarItemCell *cell = [self addItemWithImage:image];
-    [cell setAlternateImage:alternateImage];
-    
-    return cell;
+
+- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage
+{
+	return [self addItemWithImage:image alternateImage:alternateImage target:nil action:nil];
 }
+
 - (void)addCell:(ITSidebarItemCell *)cell {
     [self.matrix addRowWithCells:@[ cell ]];
     [self resizeMatrix];
 }
-- (void)removeRow:(NSInteger)row {
-    [self.matrix removeRow:row];
-    [self resizeMatrix];
+
+- (void)removeRow:(NSInteger)row
+{
+	[self removeItemAtIndex:row];
+}
+
+- (void)removeItemAtIndex:(NSInteger)index
+{
+	[self.matrix removeRow:index];
+	[self resizeMatrix];
+}
+
+- (NSInteger)numberOfItems
+{
+	return [self.matrix numberOfRows];
 }
 
 #pragma mark Resizing
+
 - (void)setFrame:(NSRect)frameRect {
     [super setFrame:frameRect];
     [self resizeMatrix];
 }
+
 - (void)resizeMatrix {
     [self.matrix sizeToCells];
     
@@ -263,6 +305,7 @@
 }
 
 #pragma mark ITSidebar Target Action
+
 - (IBAction)matrixCallback:(id)sender {
     if ([self.target respondsToSelector:self.action]) {
         // Ideally, NSInvocation needs to be used here but, afterDelay:0 is just as good (for now) :)
@@ -272,10 +315,12 @@
         [self.selectedItem.target performSelector:self.selectedItem.action withObject:self.selectedItem afterDelay:0];
     }
 }
+
 - (void)setTarget:(id)target {
     [self.matrix setTarget:self];
     _target = target;
 }
+
 - (void)setAction:(SEL)action {
     [self.matrix setAction:@selector(matrixCallback:)];
     _action = action;
