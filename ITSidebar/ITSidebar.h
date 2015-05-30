@@ -52,10 +52,15 @@
 + (Class)sidebarItemCellClass;
 
 // Add/Remove Cells
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action;
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action;
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage;
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image;
+- (void)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action;
+- (void)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action;
+- (void)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage;
+- (void)addItemWithImage:(NSImage *)image;
+
+- (void)insertItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action atIndex:(NSUInteger)index;
+- (void)insertItemWithImage:(NSImage *)image target:(id)target action:(SEL)action atIndex:(NSUInteger)index;
+- (void)insertItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage atIndex:(NSUInteger)index;
+- (void)insertItemWithImage:(NSImage *)image atIndex:(NSUInteger)index;
 
 - (void)removeRow:(NSInteger)row __deprecated; //what is a "row"? The user of an encapsulation doesn't care about the internal workings.
 - (void)removeItemAtIndex:(NSInteger)index;

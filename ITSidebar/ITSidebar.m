@@ -242,36 +242,55 @@
     return [ITSidebarItemCell class];
 }
 
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action
+- (void)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action
+{
+	[self insertItemWithImage:image alternateImage:alternateImage target:target action:action atIndex:self.numberOfItems];
+}
+
+- (void)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action
+{
+	[self addItemWithImage:image alternateImage:nil target:target action:action];
+}
+
+- (void)addItemWithImage:(NSImage *)image
+{
+	[self addItemWithImage:image alternateImage:nil target:nil action:nil];
+}
+
+- (void)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage
+{
+	[self addItemWithImage:image alternateImage:alternateImage target:nil action:nil];
+}
+
+- (void)insertItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage target:(id)target action:(SEL)action atIndex:(NSUInteger)index
 {
 	ITSidebarItemCell *cell = [[[self.class sidebarItemCellClass] alloc] initImageCell:image];
 	
 	if (target) [cell setTarget:target];
 	if (action) [cell setAction:action];
 	if (alternateImage) [cell setAlternateImage:alternateImage];
-
-	[self addCell:cell];
 	
-	return cell;
+	[self insertCell:cell atIndex:index];
 }
 
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image target:(id)target action:(SEL)action
+- (void)insertItemWithImage:(NSImage *)image target:(id)target action:(SEL)action atIndex:(NSUInteger)index
 {
-	return [self addItemWithImage:image alternateImage:nil target:target action:action];
+	[self insertItemWithImage:image alternateImage:nil target:target action:action atIndex:index];
 }
 
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image
+- (void)insertItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage atIndex:(NSUInteger)index
 {
-	return [self addItemWithImage:image alternateImage:nil];
+	[self insertItemWithImage:image alternateImage:alternateImage target:nil action:nil atIndex:index];
 }
 
-- (ITSidebarItemCell *)addItemWithImage:(NSImage *)image alternateImage:(NSImage *)alternateImage
+- (void)insertItemWithImage:(NSImage *)image atIndex:(NSUInteger)index
 {
-	return [self addItemWithImage:image alternateImage:alternateImage target:nil action:nil];
+	[self insertItemWithImage:image alternateImage:nil target:nil action:nil atIndex:index];
 }
 
-- (void)addCell:(ITSidebarItemCell *)cell {
-    [self.matrix addRowWithCells:@[ cell ]];
+- (void)insertCell:(ITSidebarItemCell *)cell atIndex:(NSUInteger)index
+{
+    [self.matrix insertRow:index withCells:@[cell]];
     [self resizeMatrix];
 }
 
